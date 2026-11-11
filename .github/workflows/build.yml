@@ -45,17 +45,14 @@ jobs:
           set -o pipefail
           export ANDROID_NDK_ROOT="$ANDROID_NDK_LATEST_HOME"
           export ANDROID_NDK_HOME="$ANDROID_NDK_LATEST_HOME"
-          cargo install cargo-apk --locked 2>&1 | tail -5
-          cargo apk build --release --lib 2>&1 | tee /tmp/android.log
+          (cargo install cargo-apk --locked && cargo apk build --release --lib) 2>&1 | tee /tmp/android.log
       - uses: actions/upload-artifact@v4
         if: success()
         with:
           name: NovaForge-apk
           path: target/release/apk/*.apk
-      - name: Publish log
-        if: always() && github.ref == 'refs/heads/main'
+      - name: Report log as annotation
+        if: failure()
         run: |
-          tail -c 60000 /tmp/android.log > /tmp/out.txt || true
-          git config --global user.name ci && git config --global user.email ci@example.com
-          rm -rf /tmp/logs; git clone --depth 1 --branch ci-logs-android "https://x-access-token:${{ github.token }}@github.com/${{ github.repository }}.git" /tmp/logs 2>/dev/null || { rm -rf /tmp/logs; mkdir -p /tmp/logs && cd /tmp/logs && git init -q -b ci-logs-android && git remote add origin "https://x-access-token:${{ github.token }}@github.com/${{ github.repository }}.git"; }
-          cd /tmp/logs && cp /tmp/out.txt android.txt && git add -A && git commit -qm "android log ${{ github.sha }}" && (git pull -q --rebase origin ci-logs-android 2>/dev/null; git push -q origin ci-logs-android)
+          grep -v -E "^\s*(Compiling|Downloaded|Downloading|Updating|Locking|Adding|Checking)" /tmp/android.log 2>/dev/null | tail -n 60 | sed 's/%/%25/g' | awk '{printf "%s%%0A",$0}' > /tmp/ann.txt
+          echo "::error title=android-log::$(cat /tmp/ann.txt)"
