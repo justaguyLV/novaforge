@@ -57,5 +57,5 @@ jobs:
         run: |
           tail -c 60000 /tmp/android.log > /tmp/out.txt || true
           git config --global user.name ci && git config --global user.email ci@example.com
-          git clone --depth 1 --branch ci-logs "https://x-access-token:${{ github.token }}@github.com/${{ github.repository }}.git" /tmp/logs 2>/dev/null || { mkdir /tmp/logs && cd /tmp/logs && git init -q -b ci-logs && git remote add origin "https://x-access-token:${{ github.token }}@github.com/${{ github.repository }}.git"; }
-          cd /tmp/logs && cp /tmp/out.txt android.txt && git add -A && git commit -qm "android log ${{ github.sha }}" && (git pull -q --rebase origin ci-logs 2>/dev/null; git push -q origin ci-logs)
+          git clone --depth 1 --branch ci-logs-android "https://x-access-token:${{ github.token }}@github.com/${{ github.repository }}.git" /tmp/logs 2>/dev/null || { mkdir /tmp/logs && cd /tmp/logs && git init -q -b ci-logs-android && git remote add origin "https://x-access-token:${{ github.token }}@github.com/${{ github.repository }}.git"; }
+          cd /tmp/logs && cp /tmp/out.txt android.txt && git add -A && git commit -qm "android log ${{ github.sha }}" && (git pull -q --rebase origin ci-logs-android 2>/dev/null; git push -q origin ci-logs-android)

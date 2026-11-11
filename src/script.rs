@@ -1,7 +1,8 @@
 //! Python scripting host (RustPython) and the `nova` API exposed to scripts.
 use crate::ecs::{self, Bounce, Sprite, Transform, Velocity};
 use hecs::Entity;
-use rustpython_vm::{Interpreter, Scope, VirtualMachine};
+use rustpython_vm::scope::Scope;
+use rustpython_vm::{Interpreter, VirtualMachine};
 
 const PRELUDE: &str = include_str!("../assets/prelude.py");
 
