@@ -6,4 +6,4 @@
       Adding rustpython-vm v0.4.0 (available: v0.6.0)
       Adding wgpu v22.1.0 (available: v30.0.1)
     Checking novaforge v0.1.0 (/home/runner/work/novaforge/novaforge)
-    Finished `dev` profile [unoptimized + debuginfo] target(s) in 3.39s
+    Finished `dev` profile [unoptimized + debuginfo] target(s) in 6.62s
