@@ -43,6 +43,11 @@ jobs:
       - name: Build APK
         run: |
           set -o pipefail
+          cargo fetch --target armv7-linux-androideabi 2>&1 | tail -2
+          for f in $HOME/.cargo/registry/src/*/rustpython-vm-0.4.0/src/stdlib/io.rs; do
+            sed -i 's/(status.st_mode & libc::S_IFMT) == libc::S_IFDIR/((status.st_mode as u32) \& (libc::S_IFMT as u32)) == (libc::S_IFDIR as u32)/' "$f"
+            grep -n "S_IFDIR" "$f"
+          done
           yes | "$ANDROID_HOME/cmdline-tools/latest/bin/sdkmanager" --licenses >/dev/null 2>&1 || true
           "$ANDROID_HOME/cmdline-tools/latest/bin/sdkmanager" "platforms;android-33" "build-tools;33.0.2" 2>&1 | tail -3 | tee /tmp/sdk.log
           export ANDROID_NDK_ROOT="$ANDROID_NDK_LATEST_HOME"
