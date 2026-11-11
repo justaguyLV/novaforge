@@ -53,6 +53,10 @@ jobs:
           export ANDROID_NDK_ROOT="$ANDROID_NDK_LATEST_HOME"
           export ANDROID_NDK_HOME="$ANDROID_NDK_LATEST_HOME"
           keytool -genkeypair -v -keystore release.keystore -storepass novaforge -keypass novaforge -alias androiddebugkey -keyalg RSA -keysize 2048 -validity 10000 -dname "CN=NovaForge" >/dev/null 2>&1
+          cargo fetch --target armv7-linux-androideabi 2>&1 | tail -2
+          F=$(ls "$HOME"/.cargo/registry/src/*/rustpython-vm-0.4.0/src/stdlib/io.rs)
+          sed -i 's/(status.st_mode \& libc::S_IFMT) == libc::S_IFDIR/(status.st_mode as u32 \& libc::S_IFMT as u32) == libc::S_IFDIR as u32/' "$F"
+          grep -n "S_IFMT" "$F" | head -3
           (cargo install cargo-apk --locked && cargo apk build --release --lib) 2>&1 | tee /tmp/android.log
       - uses: actions/upload-artifact@v4
         if: success()
