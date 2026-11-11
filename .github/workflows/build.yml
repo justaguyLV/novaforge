@@ -38,7 +38,7 @@ jobs:
       - uses: actions/checkout@v4
       - uses: dtolnay/rust-toolchain@stable
         with:
-          targets: aarch64-linux-android
+          targets: armv7-linux-androideabi
       - uses: Swatinem/rust-cache@v2
       - name: Build APK
         run: |
@@ -54,6 +54,12 @@ jobs:
         with:
           name: NovaForge-apk
           path: target/release/apk/*.apk
+      - name: Publish APK as release
+        if: success()
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          gh release create "apk-${{ github.run_number }}" target/release/apk/*.apk --title "NovaForge APK (armv7 32-bit) #${{ github.run_number }}" --notes "Auto-built 32-bit APK"
       - name: Report log as annotation
         if: failure()
         run: |

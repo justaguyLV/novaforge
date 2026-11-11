@@ -34,7 +34,7 @@ codegen-units = 4
 [package.metadata.android]
 package = "dev.novaforge.demo"
 apk_name = "NovaForge"
-build_targets = ["aarch64-linux-android"]
+build_targets = ["armv7-linux-androideabi"]
 
 [package.metadata.android.sdk]
 min_sdk_version = 26
